@@ -73,6 +73,8 @@ doc.pipe(fs.createWriteStream(__dirname+"\\"+"List Of Restaurants"+'.pdf'));
     async function restaurant_details(restaurant_link){
         await page.goto(restaurant_link);
 
+        await page.screenshot({path:"ss.png"});
+
         await page.waitForSelector('[data-toggle="modal"]');
 
         await page.evaluate(function(){
@@ -85,8 +87,6 @@ doc.pipe(fs.createWriteStream(__dirname+"\\"+"List Of Restaurants"+'.pdf'));
             return a.innerText;
         })
 
-        await page.screenshot({path:"ss.png"});
-
         doc.image('./ss.png', {
             fit: [250, 300],
             align: 'center',
@@ -94,7 +94,7 @@ doc.pipe(fs.createWriteStream(__dirname+"\\"+"List Of Restaurants"+'.pdf'));
         });
 
         doc.font('Times-Roman');
-        doc.fontSize(15);
+        doc.fontSize(18);
 
         doc.fillColor('black')
             .text("Restaurant Name: ",{
@@ -125,16 +125,17 @@ doc.pipe(fs.createWriteStream(__dirname+"\\"+"List Of Restaurants"+'.pdf'));
         let content=restaurant_details.split("|");
         let cost=content[0];
         let cuisines=content[1];
+
+        console.log("Cost: ",cost);
         cost=cost.slice(1);
 
-        console.log("Cost: Rs.",cost);
         console.log("Cuisines: ",cuisines);
 
         doc.fillColor('black')
             .text("Cost: ",{
                 continued:true
             }).fillColor('#1B1464')
-            .text("Rs. "+cost);
+            .text("Rs."+cost);
 
         doc.fillColor('black')
             .text("Cuisines: ",{
@@ -194,7 +195,7 @@ doc.pipe(fs.createWriteStream(__dirname+"\\"+"List Of Restaurants"+'.pdf'));
         doc.fillColor('black')
             .text("Google Maps Link: ",{
                 continued:true
-            }).fillColor('#74b9ff')
+            }).fillColor('#1B1464')
             .text(map_link);
         
         console.log("Google Maps Link:",map_link);
