@@ -1,6 +1,7 @@
 let pup=require('puppeteer');
 let fs=require('fs');
 let PDFDocument = require('pdfkit');
+const { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } = require('constants');
 let doc = new PDFDocument({ autoFirstPage: false });
 doc.pipe(fs.createWriteStream(__dirname+"\\"+"List Of Restaurants"+'.pdf'));
 
@@ -70,6 +71,8 @@ doc.pipe(fs.createWriteStream(__dirname+"\\"+"List Of Restaurants"+'.pdf'));
         return links;
     })
 
+    let c=1;
+
     async function restaurant_details(restaurant_link){
         
         doc.addPage({
@@ -78,12 +81,14 @@ doc.pipe(fs.createWriteStream(__dirname+"\\"+"List Of Restaurants"+'.pdf'));
 
         await page.goto(restaurant_link);
 
-        await page.screenshot({path:"ss.png"});
+        await page.screenshot({path:c+".png"});
 
-        doc.image('ss.png', {
+        doc.image(c+'.png', {
             width:470,
             height:300,
           });
+
+        c++;
 
         await page.waitForSelector('[data-toggle="modal"]');
 
