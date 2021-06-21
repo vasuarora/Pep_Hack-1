@@ -1,10 +1,9 @@
 let pup=require('puppeteer');
-// let fs=require('fs');
-// let PDFDocument = require('pdfkit');
 
-// let doc = new PDFDocument;
-// doc.addPage();
-// doc.pipe(fs.createWriteStream('example.pdf'));
+let fs=require('fs');
+let PDFDocument = require('pdfkit');
+let doc = new PDFDocument;
+doc.pipe(fs.createWriteStream(__dirname+"\\"+"List Of Restaurants"+'.pdf'));
 
 (async function(){
     let browser=await pup.launch({
@@ -14,7 +13,8 @@ let pup=require('puppeteer');
         defaultViewport:null,
     })
 
-    let page=await browser.newPage();
+    let page_arr=await browser.pages();
+    let page=page_arr[0];
     
     await page.goto("https://www.dineout.co.in/");
 
@@ -86,7 +86,17 @@ let pup=require('puppeteer');
             return a.innerText;
         })
 
-        await page.screenshot({path:restaurant_name+".png"});
+        await page.screenshot({path:"ss.png"});
+
+        doc.image('./ss.png', {
+            fit: [250, 300],
+            align: 'center',
+            valign: 'center'
+        });
+
+        doc
+        .fontSize(20)
+        .text(restaurant_name);
 
         console.log("Restaurant Name: ",restaurant_name);
 
@@ -94,6 +104,10 @@ let pup=require('puppeteer');
             let a=document.querySelector(".restnt-rating.rating-5");
             return a.innerText;
         })
+
+        doc
+        .fontSize(20)
+        .text(restaurant_rating);
 
         console.log("Rating: ",restaurant_rating);
 
@@ -109,27 +123,46 @@ let pup=require('puppeteer');
         console.log("Cost: ",cost);
         console.log("Cuisines: ",cuisines);
 
+        doc
+        .fontSize(20)
+        .text(cost);
+
+        doc
+        .fontSize(20)
+        .text(cuisines);
+
         let restaurant_contact=await page.evaluate(function(){
             let a=document.querySelector('[data-event-action="Call the restaurant"] p');
             return a.innerText;
         })
 
+        doc
+        .fontSize(20)
+        .text(restaurant_contact);
+
         console.log("Contact Number: ",restaurant_contact);
 
         let restaurant_timings=await page.evaluate(function(){
-            let a=document.querySelectorAll(".text-blue.font-bold");
-            return a[1].innerText;
+            let a=document.querySelector(".restnt-details_info .timing");
+            return a.innerText;
         })
 
-        restaurant_timings=restaurant_timings.slice(1,-1);
-        console.log("Time: ",restaurant_timings);
+        doc
+        .fontSize(20)
+        .text(restaurant_timings);
+
+        console.log(restaurant_timings);
 
         await page.waitForSelector('.dir-info-wrap .address p');
 
         let address=await page.evaluate(function(){
             let a=document.querySelector(".dir-info-wrap .address p");
             return a.innerText;
-        })
+        })  
+
+        doc
+        .fontSize(20)
+        .text(address);
 
         console.log("Address: ",address);
 
@@ -140,6 +173,10 @@ let pup=require('puppeteer');
             let maps=a.getAttribute('href');
             return maps;
         })
+
+        doc
+        .fontSize(20)
+        .text(map_link);
         
         console.log("Google Maps Link:",map_link);
 
@@ -171,15 +208,22 @@ let pup=require('puppeteer');
             return a.innerText;
         })
 
+        doc
+        .fontSize(20)
+        .text(Distance_From_Home);
+
         console.log("Distance From Home: ",Distance_From_Home);
 
         console.log("\n");
+
+        doc.addPage();
     }
 
     for(let i=0;i<restaurant_link.length;i++){
         await restaurant_details(restaurant_link[i]);
     }
 
+    doc.end();
     await browser.close();
-
+    
 })();
