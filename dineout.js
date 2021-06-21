@@ -1,7 +1,7 @@
 let pup=require('puppeteer');
 let fs=require('fs');
 let PDFDocument = require('pdfkit');
-let doc = new PDFDocument;
+let doc = new PDFDocument({ autoFirstPage: false });
 doc.pipe(fs.createWriteStream(__dirname+"\\"+"List Of Restaurants"+'.pdf'));
 
 (async function(){
@@ -64,13 +64,18 @@ doc.pipe(fs.createWriteStream(__dirname+"\\"+"List Of Restaurants"+'.pdf'));
     let restaurant_link=await page.evaluate(function(){
         let a=document.querySelectorAll(".restnt-name.ellipsis");
         let links=[];
-        for(let i=0;i<2;i++){
+        for(let i=0;i<5;i++){
             links.push("https://www.dineout.co.in/"+a[i].getAttribute('href'));
         }
         return links;
     })
 
     async function restaurant_details(restaurant_link){
+        
+        doc.addPage({
+            margin:50
+        });
+
         await page.goto(restaurant_link);
 
         await page.screenshot({path:"ss.png"});
@@ -273,8 +278,6 @@ doc.pipe(fs.createWriteStream(__dirname+"\\"+"List Of Restaurants"+'.pdf'));
         console.log("Distance From Home: ",Distance_From_Home);
 
         console.log("\n");
-
-        doc.addPage();
     }
 
     for(let i=0;i<restaurant_link.length;i++){
