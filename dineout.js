@@ -75,6 +75,11 @@ doc.pipe(fs.createWriteStream(__dirname+"\\"+"List Of Restaurants"+'.pdf'));
 
         await page.screenshot({path:"ss.png"});
 
+        doc.image('ss.png', {
+            width:470,
+            height:300,
+          });
+
         await page.waitForSelector('[data-toggle="modal"]');
 
         await page.evaluate(function(){
@@ -87,20 +92,18 @@ doc.pipe(fs.createWriteStream(__dirname+"\\"+"List Of Restaurants"+'.pdf'));
             return a.innerText;
         })
 
-        doc.image('./ss.png', {
-            fit: [250, 300],
-            align: 'center',
-            valign: 'center'
-        });
-
         doc.font('Times-Roman');
-        doc.fontSize(18);
+        doc.fontSize(16);
 
+        doc.moveDown(1);
         doc.fillColor('black')
             .text("Restaurant Name: ",{
+                underline:true,
                 continued:true
             }).fillColor('#1B1464')
-            .text(restaurant_name);
+            .text(restaurant_name,{
+                underline:false
+            })
 
         console.log("Restaurant Name: ",restaurant_name);
 
@@ -109,11 +112,15 @@ doc.pipe(fs.createWriteStream(__dirname+"\\"+"List Of Restaurants"+'.pdf'));
             return a.innerText;
         })
 
+        doc.moveDown(0.7);
         doc.fillColor('black')
             .text("Rating (out of 5): ",{
+                underline:true,
                 continued:true
             }).fillColor('#1B1464')
-            .text(restaurant_rating);
+            .text(restaurant_rating,{
+                underline:false,
+            })
 
         console.log("Rating (out of 5): ",restaurant_rating);
 
@@ -131,28 +138,41 @@ doc.pipe(fs.createWriteStream(__dirname+"\\"+"List Of Restaurants"+'.pdf'));
 
         console.log("Cuisines: ",cuisines);
 
+        doc.moveDown(0.7);
         doc.fillColor('black')
             .text("Cost: ",{
+                underline:true,
                 continued:true
-            }).fillColor('#1B1464')
-            .text("Rs."+cost);
 
+            }).fillColor('#1B1464')
+            .text("Rs."+cost,{
+                underline:false
+            })
+        
+        doc.moveDown(0.7);
         doc.fillColor('black')
             .text("Cuisines: ",{
+                underline:true,
                 continued:true
             }).fillColor('#1B1464')
-            .text(cuisines);
+            .text(cuisines,{
+                underline:false
+            })
 
         let restaurant_contact=await page.evaluate(function(){
             let a=document.querySelector('[data-event-action="Call the restaurant"] p');
             return a.innerText;
         })
 
+        doc.moveDown(0.7);
         doc.fillColor('black')
             .text("Contact Number: ",{
+                underline:true,
                 continued:true
             }).fillColor('#1B1464')
-            .text(restaurant_contact);
+            .text(restaurant_contact,{
+                underline:false
+            })
 
         console.log("Contact Number: ",restaurant_contact);
 
@@ -161,11 +181,15 @@ doc.pipe(fs.createWriteStream(__dirname+"\\"+"List Of Restaurants"+'.pdf'));
             return a.innerText;
         })
 
+        doc.moveDown(0.7);
         doc.fillColor('black')
             .text("Time: ",{
+                underline:true,
                 continued:true
             }).fillColor('#1B1464')
-            .text(restaurant_timings);
+            .text(restaurant_timings,{
+                underline:false
+            })
 
         console.log("Time: ",restaurant_timings);
 
@@ -174,13 +198,17 @@ doc.pipe(fs.createWriteStream(__dirname+"\\"+"List Of Restaurants"+'.pdf'));
         let address=await page.evaluate(function(){
             let a=document.querySelector(".dir-info-wrap .address p");
             return a.innerText;
-        })  
+        }) 
 
+        doc.moveDown(0.7);
         doc.fillColor('black')
             .text("Address: ",{
+                underline:true,
                 continued:true
             }).fillColor('#1B1464')
-            .text(address);
+            .text(address,{
+                underline:false
+            })
 
         console.log("Address: ",address);
 
@@ -192,11 +220,15 @@ doc.pipe(fs.createWriteStream(__dirname+"\\"+"List Of Restaurants"+'.pdf'));
             return maps;
         })
 
+        doc.moveDown(0.7);
         doc.fillColor('black')
             .text("Google Maps Link: ",{
+                underline:true,
                 continued:true
-            }).fillColor('#1B1464')
-            .text(map_link);
+            }).fillColor('blue')
+            .text(map_link,{
+                underline:false
+            })
         
         console.log("Google Maps Link:",map_link);
 
@@ -228,11 +260,15 @@ doc.pipe(fs.createWriteStream(__dirname+"\\"+"List Of Restaurants"+'.pdf'));
             return a.innerText;
         })
 
+        doc.moveDown(0.7);
         doc.fillColor('black')
             .text("Distance From Home: ",{
+                underline:true,
                 continued:true
             }).fillColor('#1B1464')
-            .text(Distance_From_Home);
+            .text(Distance_From_Home,{
+                underline:false
+            })
 
         console.log("Distance From Home: ",Distance_From_Home);
 
