@@ -1,10 +1,13 @@
 let pup=require('puppeteer');
 let fs=require('fs');
+let nodemailer=require('nodemailer');
 let PDFDocument = require('pdfkit');
 let doc = new PDFDocument({ autoFirstPage: false });
-doc.pipe(fs.createWriteStream(__dirname+"\\"+"List Of Restaurants"+'.pdf'));
+
+doc.pipe(fs.createWriteStream(__dirname+"\\"+"List_Of_Restaurants"+'.pdf'));
 
 let cuisine_choice=process.argv.slice(2);
+let current_location=process.argv.slice(2);
 
 (async function(){
     let browser=await pup.launch({
@@ -253,7 +256,7 @@ let cuisine_choice=process.argv.slice(2);
 
         await page.waitForSelector('[aria-label="Choose starting point, or click on the map..."]');
 
-        await page.type('[aria-label="Choose starting point, or click on the map..."]',"Model Town");
+        await page.type('[aria-label="Choose starting point, or click on the map..."]',current_location[1]);
 
         await page.keyboard.press('Enter');
 
@@ -273,7 +276,7 @@ let cuisine_choice=process.argv.slice(2);
 
         doc.moveDown(0.7);
         doc.fillColor('black')
-            .text("Distance From Home: ",{
+            .text("Arrival Time & Distance From Home: ",{
                 underline:true,
                 continued:true
             }).fillColor('#1B1464')
@@ -281,7 +284,7 @@ let cuisine_choice=process.argv.slice(2);
                 underline:false
             })
 
-        console.log("Distance From Home: ",Distance_From_Home);
+        console.log("Arrival Time & Distance From Home: ",Distance_From_Home);
 
         console.log("\n");
     }
@@ -291,6 +294,30 @@ let cuisine_choice=process.argv.slice(2);
     }
 
     doc.end();
+
+    // let transporter = nodemailer.createTransport({
+    //     service: 'gmail',
+    //     auth: {
+    //       user: 'bpitstudent520@gmail.com',
+    //       pass: 'bpit@123'
+    //     }
+    //   });
+      
+    //   let mailOptions = {
+    //     from: 'bpitstudent520@gmail.com',
+    //     to: 'bpitstudent520@gmail.com',
+    //     subject: 'Sending Email using Node.js',
+    //     text: 'That was easy!'
+    //   };
+      
+    //   transporter.sendMail(mailOptions, function(error, info){
+    //     if (error) {
+    //       console.log(error);
+    //     } else {
+    //       console.log('Email sent: ' + info.response);
+    //     }
+    //   });
+
     await browser.close();
     
 })();
