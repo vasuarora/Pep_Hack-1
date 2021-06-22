@@ -295,28 +295,35 @@ let current_location=process.argv.slice(2);
 
     doc.end();
 
-    // let transporter = nodemailer.createTransport({
-    //     service: 'gmail',
-    //     auth: {
-    //       user: 'bpitstudent520@gmail.com',
-    //       pass: 'bpit@123'
-    //     }
-    //   });
-      
-    //   let mailOptions = {
-    //     from: 'bpitstudent520@gmail.com',
-    //     to: 'bpitstudent520@gmail.com',
-    //     subject: 'Sending Email using Node.js',
-    //     text: 'That was easy!'
-    //   };
-      
-    //   transporter.sendMail(mailOptions, function(error, info){
-    //     if (error) {
-    //       console.log(error);
-    //     } else {
-    //       console.log('Email sent: ' + info.response);
-    //     }
-    //   });
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
+    let transporter=nodemailer.createTransport({
+        service:'gmail',
+        auth:{
+            user:'bpitstudent520@gmail.com',
+            pass:'bpit@123',
+        }
+    })
+
+    let mailoptions={
+        from:'bpitstudent520@gmail.com',
+        to:'bpitstudent520@gmail.com',
+        subject:'List Of Restaurants',
+        text:'Below is the attached pdf of popular restaurants in your city',
+        attachments:[{
+            filename:'List_Of_Restaurants',
+            path:__dirname+"\\List_Of_Restaurants.pdf"
+        }] 
+    };
+
+    transporter.sendMail(mailoptions,function(err,data){
+        if(err){
+            console.log("Error Occured",err);
+        }
+        else{
+            console.log("EMail Sent!");
+        }
+    });
 
     await browser.close();
     
