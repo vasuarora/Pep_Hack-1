@@ -1,9 +1,10 @@
 let pup=require('puppeteer');
 let fs=require('fs');
 let PDFDocument = require('pdfkit');
-const { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } = require('constants');
 let doc = new PDFDocument({ autoFirstPage: false });
 doc.pipe(fs.createWriteStream(__dirname+"\\"+"List Of Restaurants"+'.pdf'));
+
+let cuisine_choice=process.argv.slice(2);
 
 (async function(){
     let browser=await pup.launch({
@@ -30,7 +31,7 @@ doc.pipe(fs.createWriteStream(__dirname+"\\"+"List Of Restaurants"+'.pdf'));
         page.click('#restaurantSearch')
     ])
 
-    await page.keyboard.type('North Indian', { delay: 50 });
+    await page.keyboard.type(cuisine_choice[0], { delay: 50 });
 
     await page.waitForSelector("._2zsAT li");
 
@@ -81,9 +82,9 @@ doc.pipe(fs.createWriteStream(__dirname+"\\"+"List Of Restaurants"+'.pdf'));
 
         await page.goto(restaurant_link);
 
-        await page.screenshot({path:c+".png"});
+        await page.screenshot({path:__dirname+"\\Restaurant_Images\\"+c+".png"});
 
-        doc.image(c+'.png', {
+        doc.image(__dirname+"\\Restaurant_Images\\"+c+'.png', {
             width:470,
             height:300,
           });
