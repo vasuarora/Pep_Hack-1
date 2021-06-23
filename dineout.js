@@ -311,7 +311,7 @@ let current_location=process.argv.slice(2);
         subject:'List Of Restaurants',
         text:'Below is the attached pdf of popular restaurants in your city',
         attachments:[{
-            filename:'List_Of_Restaurants',
+            filename:'List_Of_Restaurants.pdf',
             path:__dirname+"\\List_Of_Restaurants.pdf"
         }] 
     };
@@ -321,7 +321,7 @@ let current_location=process.argv.slice(2);
             console.log("Error Occured",err);
         }
         else{
-            console.log("EMail Sent!");
+            console.log("E-Mail Sent Successfully!!");
         }
     });
 
