@@ -307,7 +307,7 @@ let current_location=process.argv.slice(2);
 
     let mailoptions={
         from:'bpitstudent520@gmail.com',
-        to:'bpitstudent520@gmail.com',
+        to:'vasuarora2112@gmail.com',
         subject:'List Of Restaurants',
         text:'Below is the attached pdf of popular restaurants in your city',
         attachments:[{
