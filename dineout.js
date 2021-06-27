@@ -4,10 +4,10 @@ let nodemailer=require('nodemailer');
 let PDFDocument = require('pdfkit');
 let doc = new PDFDocument({ autoFirstPage: false });
 
-doc.pipe(fs.createWriteStream(__dirname+"\\"+"List_Of_Restaurants"+'.pdf'));
+doc.pipe(fs.createWriteStream(__dirname+"\\"+"List_Of_Restaurants"+'.pdf'));          //creation path of pdf
 
-let cuisine_choice=process.argv.slice(2);
-let current_location=process.argv.slice(2);
+let cuisine_choice=process.argv.slice(2);               //input for cuisine choice
+let current_location=process.argv.slice(2);             //input for user's current location
 
 (async function(){
     let browser=await pup.launch({
@@ -18,36 +18,36 @@ let current_location=process.argv.slice(2);
     })
 
     let page_arr=await browser.pages();
-    let page=page_arr[0];
+    let page=page_arr[0];                                         //new browser page
     
-    await page.goto("https://www.dineout.co.in/");
+    await page.goto("https://www.dineout.co.in/");                //navigating to the dineout website              
 
     await Promise.all([
         page.waitForNavigation(),
-        page.click('[aria-label="Delhi"]')
+        page.click('[aria-label="Delhi"]')                      //Selecting the city as Delhi
     ])
 
     page.waitForSelector("#restaurantSearch");
 
     await Promise.all([
         page.waitForNavigation(),
-        page.click('#restaurantSearch')
+        page.click('#restaurantSearch')                                   
     ])
 
-    await page.keyboard.type(cuisine_choice[0], { delay: 50 });
+    await page.keyboard.type(cuisine_choice[0], { delay: 50 });                //Typing the cuisine name in search box
 
     await page.waitForSelector("._2zsAT li");
 
     await page.evaluate(function(){
-        let a=document.querySelectorAll("._2zsAT li");
-        a[2].click();
+        let a=document.querySelectorAll("._2zsAT li");                         
+        a[2].click();                                                //clicking on search by cuisine option
     })
 
     await page.waitForSelector("._2QLg5");
 
     await Promise.all([
         page.waitForNavigation(),
-        page.click('._2QLg5'),
+        page.click('._2QLg5'),                                //clicking on the search button
     ])
     
     await page.waitForSelector(".do.do-angle-down",{visible:true});
@@ -61,7 +61,7 @@ let current_location=process.argv.slice(2);
 
     await Promise.all([
         page.waitForNavigation(),
-        page.click('[data-name="Rating"]'),
+        page.click('[data-name="Rating"]'),                        //Selecting Sort by as rating
     ])
 
     await page.waitForSelector(".restnt-name.ellipsis");
@@ -70,7 +70,7 @@ let current_location=process.argv.slice(2);
         let a=document.querySelectorAll(".restnt-name.ellipsis");
         let links=[];
         for(let i=0;i<5;i++){
-            links.push("https://www.dineout.co.in/"+a[i].getAttribute('href'));
+            links.push("https://www.dineout.co.in/"+a[i].getAttribute('href'));           //storing the top 5 restaurant links in array
         }
         return links;
     })
