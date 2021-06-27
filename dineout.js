@@ -83,11 +83,11 @@ let current_location=process.argv.slice(2);             //input for user's curre
             margin:50
         });
 
-        await page.goto(restaurant_link);
+        await page.goto(restaurant_link);                           //navigation to a particular restaurant
 
-        await page.screenshot({path:__dirname+"\\Restaurant_Images\\"+c+".png"});
+        await page.screenshot({path:__dirname+"\\Restaurant_Images\\"+c+".png"});                //taking the screenshot and storing it in the given path
 
-        doc.image(__dirname+"\\Restaurant_Images\\"+c+'.png', {
+        doc.image(__dirname+"\\Restaurant_Images\\"+c+'.png', {                     //storing the image in pdf
             width:470,
             height:300,
           });
@@ -102,15 +102,15 @@ let current_location=process.argv.slice(2);             //input for user's curre
         })
 
         let restaurant_name=await page.evaluate(function(){
-            let a=document.querySelector(".restnt-details_info h1");
+            let a=document.querySelector(".restnt-details_info h1");                //fetching restaurant's name
             return a.innerText;
         })
 
-        doc.font('Times-Roman');
-        doc.fontSize(16);
+        doc.font('Times-Roman');                 //font style in pdf
+        doc.fontSize(16);                        //font size in pdf
 
         doc.moveDown(1);
-        doc.fillColor('black')
+        doc.fillColor('black')                             //storing restaurant's name in pdf
             .text("Restaurant Name: ",{
                 underline:true,
                 continued:true
@@ -122,12 +122,12 @@ let current_location=process.argv.slice(2);             //input for user's curre
         console.log("Restaurant Name: ",restaurant_name);
 
         let restaurant_rating=await page.evaluate(function(){
-            let a=document.querySelector(".restnt-rating.rating-5");
+            let a=document.querySelector(".restnt-rating.rating-5");                  //fetching restaurant's rating
             return a.innerText;
         })
 
         doc.moveDown(0.7);
-        doc.fillColor('black')
+        doc.fillColor('black')                                           //storing restaurant's rating in pdf
             .text("Rating (out of 5): ",{
                 underline:true,
                 continued:true
@@ -140,12 +140,12 @@ let current_location=process.argv.slice(2);             //input for user's curre
 
         let restaurant_details=await page.evaluate(function(){
             let a=document.querySelector(".restnt-cost");
-            return a.innerText;
+            return a.innerText;                                         
         })
 
         let content=restaurant_details.split("|");
-        let cost=content[0];
-        let cuisines=content[1];
+        let cost=content[0];                                   //fetching restaurant's approximate dine in price
+        let cuisines=content[1];                               //fetching the cuisines available in restaurant
 
         console.log("Cost: ",cost);
         cost=cost.slice(1);
@@ -154,18 +154,18 @@ let current_location=process.argv.slice(2);             //input for user's curre
 
         doc.moveDown(0.7);
         doc.fillColor('black')
-            .text("Cost: ",{
+            .text("Cost: ",{                                //storing the dine in price in pdf
                 underline:true,
                 continued:true
 
             }).fillColor('#1B1464')
             .text("Rs."+cost,{
                 underline:false
-            })
+            })                                                  
         
         doc.moveDown(0.7);
         doc.fillColor('black')
-            .text("Cuisines: ",{
+            .text("Cuisines: ",{                       //storing the cuisines in pdf
                 underline:true,
                 continued:true
             }).fillColor('#1B1464')
@@ -175,29 +175,29 @@ let current_location=process.argv.slice(2);             //input for user's curre
 
         let restaurant_contact=await page.evaluate(function(){
             let a=document.querySelector('[data-event-action="Call the restaurant"] p');
-            return a.innerText;
+            return a.innerText;                                                             //fetching restaurant's contact details
         })
 
         doc.moveDown(0.7);
         doc.fillColor('black')
-            .text("Contact Number: ",{
+            .text("Contact Number: ",{                                     //storing the contact details in pdf
                 underline:true,
                 continued:true
             }).fillColor('#1B1464')
             .text(restaurant_contact,{
-                underline:false
+                underline:false                                 
             })
 
         console.log("Contact Number: ",restaurant_contact);
 
         let restaurant_timings=await page.evaluate(function(){
             let a=document.querySelector('[data-action="rdp-timings"] .text-blue.font-bold');
-            return a.innerText;
+            return a.innerText;                                                                 //fetching the timings of restaurant
         })
 
         doc.moveDown(0.7);
         doc.fillColor('black')
-            .text("Time: ",{
+            .text("Time: ",{                                   //storing the timings in pdf
                 underline:true,
                 continued:true
             }).fillColor('#1B1464')
@@ -211,12 +211,12 @@ let current_location=process.argv.slice(2);             //input for user's curre
 
         let address=await page.evaluate(function(){
             let a=document.querySelector(".dir-info-wrap .address p");
-            return a.innerText;
+            return a.innerText;                                          //fetching the restaurant address
         }) 
 
         doc.moveDown(0.7);
         doc.fillColor('black')
-            .text("Address: ",{
+            .text("Address: ",{                           //storing the address in pdf
                 underline:true,
                 continued:true
             }).fillColor('#1B1464')
@@ -230,13 +230,13 @@ let current_location=process.argv.slice(2);             //input for user's curre
 
         let map_link=await page.evaluate(function(){
             let a=document.querySelector(".open-map.pull-right .txt-grey");
-            let maps=a.getAttribute('href');
+            let maps=a.getAttribute('href');                                       //fetching the google map link
             return maps;
         })
 
         doc.moveDown(0.7);
         doc.fillColor('black')
-            .text("Google Maps Link: ",{
+            .text("Google Maps Link: ",{                         //storing the google map link in pdf
                 underline:true,
                 continued:true
             }).fillColor('blue')
@@ -249,6 +249,7 @@ let current_location=process.argv.slice(2);             //input for user's curre
         await page.goto(map_link);
         await page.waitForSelector('[data-value="Directions"]');
 
+        //fetching the distance and time of arrival from user's given location via google maps
         let restaurant_directions=await page.evaluate(function(){
             let a=document.querySelectorAll('[data-value="Directions"]')[0];
             a.click();
@@ -276,7 +277,7 @@ let current_location=process.argv.slice(2);             //input for user's curre
 
         doc.moveDown(0.7);
         doc.fillColor('black')
-            .text("Arrival Time & Distance From Home: ",{
+            .text("Arrival Time & Distance From Home: ",{                   //storing the distance and time of arrival in pdf
                 underline:true,
                 continued:true
             }).fillColor('#1B1464')
@@ -297,7 +298,7 @@ let current_location=process.argv.slice(2);             //input for user's curre
 
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-    let transporter=nodemailer.createTransport({
+    let transporter=nodemailer.createTransport({                     //email id configuration
         service:'gmail',
         auth:{
             user:'bpitstudent520@gmail.com',
@@ -306,12 +307,12 @@ let current_location=process.argv.slice(2);             //input for user's curre
     })
 
     let mailoptions={
-        from:'bpitstudent520@gmail.com',
-        to:'vasuarora2112@gmail.com',
-        subject:'List Of Restaurants',
+        from:'bpitstudent520@gmail.com',                                                   //sender's email address 
+        to:'vasuarora2112@gmail.com',                                                      //receiver's email address
+        subject:'List Of Restaurants',                                                    //subject of email
         text:'Below is the attached pdf of popular restaurants in your city',
         attachments:[{
-            filename:'List_Of_Restaurants.pdf',
+            filename:'List_Of_Restaurants.pdf',                                     //attaching the restaurant details pdf in email id
             path:__dirname+"\\List_Of_Restaurants.pdf"
         }] 
     };
