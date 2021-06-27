@@ -310,7 +310,7 @@ let current_location=process.argv.slice(2);             //input for user's curre
         from:'bpitstudent520@gmail.com',                                                   //sender's email address 
         to:'vasuarora2112@gmail.com',                                                      //receiver's email address
         subject:'List Of Restaurants',                                                    //subject of email
-        text:'Below is the attached pdf of popular restaurants in your city',
+        text:'Below is the attached pdf of restaurant details of your favourite cuisine',
         attachments:[{
             filename:'List_Of_Restaurants.pdf',                                     //attaching the 'restaurant details' pdf in email
             path:__dirname+"\\List_Of_Restaurants.pdf"
