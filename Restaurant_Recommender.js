@@ -4,7 +4,7 @@ let nodemailer=require('nodemailer');
 let PDFDocument = require('pdfkit');
 let doc = new PDFDocument({ autoFirstPage: false });
 
-doc.pipe(fs.createWriteStream(__dirname+"\\"+"List_Of_Restaurants"+'.pdf'));          //creation path of pdf
+doc.pipe(fs.createWriteStream(__dirname+"\\"+"List_Of_Restaurants"+'.pdf'));          //creation of pdf in the given path
 
 let cuisine_choice=process.argv.slice(2);               //input for cuisine choice
 let current_location=process.argv.slice(2);             //input for user's current location
@@ -40,7 +40,7 @@ let current_location=process.argv.slice(2);             //input for user's curre
 
     await page.evaluate(function(){
         let a=document.querySelectorAll("._2zsAT li");                         
-        a[2].click();                                                //clicking on search by cuisine option
+        a[2].click();                                                //clicking on 'search by cuisine' option
     })
 
     await page.waitForSelector("._2QLg5");
@@ -61,7 +61,7 @@ let current_location=process.argv.slice(2);             //input for user's curre
 
     await Promise.all([
         page.waitForNavigation(),
-        page.click('[data-name="Rating"]'),                        //Selecting Sort by as rating
+        page.click('[data-name="Rating"]'),                        //Selecting 'Sort by' as rating
     ])
 
     await page.waitForSelector(".restnt-name.ellipsis");
@@ -75,7 +75,7 @@ let current_location=process.argv.slice(2);             //input for user's curre
         return links;
     })
 
-    let c=1;
+    let c=1;                         //Using this variable as different names to screenshot image
 
     async function restaurant_details(restaurant_link){
         
@@ -83,11 +83,11 @@ let current_location=process.argv.slice(2);             //input for user's curre
             margin:50
         });
 
-        await page.goto(restaurant_link);                           //navigation to a particular restaurant
+        await page.goto(restaurant_link);                           //navigating to a particular restaurant page
 
         await page.screenshot({path:__dirname+"\\Restaurant_Images\\"+c+".png"});                //taking the screenshot and storing it in the given path
 
-        doc.image(__dirname+"\\Restaurant_Images\\"+c+'.png', {                     //storing the image in pdf
+        doc.image(__dirname+"\\Restaurant_Images\\"+c+'.png', {                     //storing the screenshot image in pdf
             width:470,
             height:300,
           });
@@ -106,8 +106,8 @@ let current_location=process.argv.slice(2);             //input for user's curre
             return a.innerText;
         })
 
-        doc.font('Times-Roman');                 //font style in pdf
-        doc.fontSize(16);                        //font size in pdf
+        doc.font('Times-Roman');                 //font style of text in pdf
+        doc.fontSize(16);                        //font size of text in pdf
 
         doc.moveDown(1);
         doc.fillColor('black')                             //storing restaurant's name in pdf
@@ -312,12 +312,12 @@ let current_location=process.argv.slice(2);             //input for user's curre
         subject:'List Of Restaurants',                                                    //subject of email
         text:'Below is the attached pdf of popular restaurants in your city',
         attachments:[{
-            filename:'List_Of_Restaurants.pdf',                                     //attaching the restaurant details pdf in email id
+            filename:'List_Of_Restaurants.pdf',                                     //attaching the 'restaurant details' pdf in email
             path:__dirname+"\\List_Of_Restaurants.pdf"
         }] 
     };
 
-    transporter.sendMail(mailoptions,function(err,data){
+    transporter.sendMail(mailoptions,function(err,data){                       //sending the email
         if(err){
             console.log("Error Occured",err);
         }
