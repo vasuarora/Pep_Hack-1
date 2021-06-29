@@ -75,7 +75,7 @@ let current_location=process.argv.slice(2);             //input for user's curre
         return links;
     })
 
-    let c=1;                         //Using this variable as different names to screenshot image
+    let c=1;                         //Using this variable as different names for screenshot
 
     async function restaurant_details(restaurant_link){
         
